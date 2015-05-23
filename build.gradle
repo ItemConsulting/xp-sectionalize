@@ -34,8 +34,8 @@ apply plugin: "com.github.robfletcher.compass"
  import org.apache.tools.ant.filters.ReplaceTokens
 
 
-version = '1.0.0-SNAPSHOT'
-group = 'com.enonic.lib'
+version = '0.0.1-SNAPSHOT'
+group = 'no.item.xp.modules'
 
 module {
     displayName = 'XP Sectionalize Module'

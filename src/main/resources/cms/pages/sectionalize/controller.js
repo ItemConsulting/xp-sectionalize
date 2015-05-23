@@ -7,7 +7,7 @@ function handleGet(req) {
     var me = this;
 
     function renderView() {
-        var view = resolve('default.html');
+        var view = resolve('sectionalize.html');
         var model = createModel();
 
         return UTIL.view.render(view, model);
