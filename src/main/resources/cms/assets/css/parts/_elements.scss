@@ -1,0 +1,12 @@
+.p_elements {
+  color: #000;
+
+  @include breakpoint($screen-small) {
+    color: #00f;
+  }
+
+  @include breakpoint($screen-medium) {
+    color: #0f0;
+  }
+
+}

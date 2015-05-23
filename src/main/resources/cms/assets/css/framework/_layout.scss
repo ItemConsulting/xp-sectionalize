@@ -1,0 +1,18 @@
+.logo {
+    width: 100px;
+    display: inline-block;
+}
+
+.test {
+@include single-text-shadow;
+    font-size: 50px;
+}
+
+%separator {
+     border-top: 1px solid #f00;
+ }
+
+.test {
+@extend %separator;
+}
+

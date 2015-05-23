@@ -1,0 +1,13 @@
+.test {
+
+  .menu {
+    &__item {
+
+      &.is-selected {
+        color: #f00;
+      }
+
+    }
+  }
+
+}

@@ -1,0 +1,5 @@
+This software includes the following third party software:
+
+JQuery
+MIT License
+https://jquery.org/license/

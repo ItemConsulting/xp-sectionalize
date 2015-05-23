@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <display-name>Skeleton</display-name>
+  <info>Skeleton Module</info>
+  <url>http://enonic.com/</url>
+  <vendor>
+    <name>Enonic AS</name>
+    <url>http://www.enonic.com</url>
+  </vendor>
+  <config/>
+  <x-data mixin="menu-item"/>
+  <x-data mixin="html-meta"/>
+</module>

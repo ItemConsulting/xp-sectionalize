@@ -1,0 +1,164 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'http://repo.enonic.net/public'
+        }
+    }
+
+    dependencies {
+        classpath 'com.enonic.xp.gradle:gradle-plugin:1.1.0'
+        classpath 'com.eriwen:gradle-js-plugin:1.12.1'
+        classpath 'com.eriwen:gradle-css-plugin:1.11.1'
+        classpath "com.github.robfletcher:compass-gradle-plugin:2.0.5"
+        classpath "com.github.jruby-gradle:jruby-gradle-plugin:0.1.12" // Required to build on Windows
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://repo.enonic.net/public'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'com.enonic.xp.gradle.module'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.eriwen.gradle.js'
+apply plugin: 'css'
+apply plugin: "com.github.robfletcher.compass"
+
+ //for Ant filter
+ import org.apache.tools.ant.filters.ReplaceTokens
+
+
+version = '1.0.0-SNAPSHOT'
+group = 'com.enonic.lib'
+
+module {
+    displayName = 'XP Sectionalize Module'
+}
+
+dependencies {
+    include 'com.enonic.lib:util:0.0.3'
+}
+
+publishing {
+  publications {
+    mavenJava( MavenPublication ) {
+      from components.java
+    }
+  }
+  repositories {
+    maven {
+      url 'http://repo.enonic.net/artifactory/public'
+    }
+  }
+}
+
+// Declare your sources
+javascript.source {
+    custom {
+        js {
+            srcDir "src/main/resources/cms/assets/js"
+            include "*.js"
+            //exclude "*.min.js"
+        }
+    }
+    util {
+            js {
+                srcDir "src/main/resources/cms/assets/js/lib/util"
+                include "*.js"
+                //exclude "*.min.js"
+            }
+        }
+    vendor {
+        js {
+            srcDir "src/main/resources/cms/assets/js/vendor"
+            include "*.js"
+        }
+    }
+    jquery {
+        js {
+            srcDir "src/main/resources/cms/assets/js/vendor/jquery"
+            include "*.js"
+        }
+    }
+    controllers {
+        js {
+            srcDir "src/main/resources/cms/parts"
+            include "**/*.js"
+        }
+    }
+
+}
+
+jshint {
+    tasks.jshint.source = javascript.source.custom.js.files + javascript.source.util.js.files
+    tasks.jshint.dest = file("${buildDir}/jshint.out")
+    tasks.jshint.reporter = 'checkstyle'
+    tasks.jshint.outputToStdOut = true
+}
+
+minifyJs {
+    source = javascript.source.custom.js.files
+    dest = file("${buildDir}/resources/main/cms/assets/js/custom.min.js")
+    closure {
+        warningLevel = 'QUIET'
+    }
+}
+
+
+// Configure the built-in task
+combineJs {
+    source = javascript.source.jquery.js.files + javascript.source.vendor.js.files + javascript.source.util.js.files + javascript.source.custom.js.files
+    dest = file("${buildDir}/resources/main/cms/assets/js/all.js")
+}
+
+
+requireJs {
+    source = javascript.source.custom.js.files
+    dest = file("${buildDir}/resources/main/cms/assets/js/main-built.js")
+    requirejs.buildprofile = new File('src/main/resources/cms/assets/js/build.js')
+}
+
+compass {
+    cssDir = file("${buildDir}/resources/main/cms/assets/css/tmp")
+    sassDir = file("src/main/resources/cms/assets/css")
+}
+
+dependencies {
+  compass "rubygems:breakpoint:2.5.0"
+  compass "rubygems:compass-normalize:1.5"
+  compass "rubygems:sass-globbing:1.1.1"
+}
+
+minifyCss {
+    source = "${buildDir}/resources/main/cms/assets/css/tmp/main.css"
+    dest = "${buildDir}/resources/main/cms/assets/css/tmp/main-min.css"
+}
+
+minifyCss.dependsOn += compassCompile
+
+// Replace module name placeholder in main CSS file
+task replaceModuleNamePlaceholder (type: Copy, dependsOn: ["minifyCss"]) {
+    from ("$buildDir/resources/main/cms/assets/css/tmp") {
+        include 'main-min.css'
+        filter(ReplaceTokens, tokens: ['moduleName': rootProject.name], beginToken: '0', endToken: '0')
+    }
+    into "$buildDir/resources/main/cms/assets/css"
+}
+
+
+//jar.dependsOn += minifyCss
+//jar.dependsOn += compassCompile
+jar.dependsOn += combineJs
+
+//jar.dependsOn += replaceModuleNamePlaceholder
+
+
+
+
+jar.dependsOn += replaceModuleNamePlaceholder

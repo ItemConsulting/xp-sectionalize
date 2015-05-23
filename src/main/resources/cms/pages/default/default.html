@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=1"/>
+    <title data-th-text="${pageTitle}">Enonic</title>
+    <meta name="description" data-th-attr="content=${metaDescription}" content=""/>
+    <link rel="shortcut icon" href="../../assets/img/favicon.ico" data-th-href="${portal.assetUrl({'_path=img/favicon.ico'})}" type="image/x-icon"/>
+    <link rel="stylesheet" data-th-href="${portal.assetUrl({'_path=css/main-min.css'})}" href="/assets/css/main.css"/>
+
+</head>
+<body data-portal-component-type="page" data-th-class="${bodyModuleName}">
+
+<a href="#main" id="skip-to-main-content">Skip to main content</a>
+
+<header role="banner">
+</header>
+
+<main role="main" id="main" data-portal-component-type="region">
+    <div data-th-each="component : ${mainRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag"></div>
+    </div>
+</main>
+
+<footer role="contentinfo">
+</footer>
+
+
+<script data-th-inline="javascript">
+    var defer = /*[[${portal.assetUrl({'_path=js/all.js'})}]]*/ null
+
+    function downloadJSAtOnload() {
+        var element = document.createElement("script");
+        element.src = defer;
+        document.body.appendChild(element);
+    }
+    if (window.addEventListener) {
+        window.addEventListener("load", downloadJSAtOnload, false);
+    } else if (window.attachEvent) {
+        window.attachEvent("onload", downloadJSAtOnload);
+    } else {
+        window.onload = downloadJSAtOnload;
+    }
+</script>
+
+</body>
+</html>

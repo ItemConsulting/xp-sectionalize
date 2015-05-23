@@ -1,0 +1,32 @@
+//#################################################
+// Main SCSS file that joins everything together
+//#################################################
+
+// Base (does not directly output code)
+@import 'helpers/variables';
+@import 'compass/css3.scss';
+@import 'breakpoint';
+@import 'helpers/placeholders';
+@import 'helpers/mixins';
+
+// Encapsulate everything in module namespace (0moduleName0 will be replaced in Gradle build step)
+.m_0moduleName0 {
+  // Framework
+  @import 'normalize';
+  @import 'framework/layout';
+  @import 'framework/structural';
+  @import 'framework/typography';
+  @import 'framework/buttons';
+  @import 'framework/forms';
+  @import 'framework/lists';
+  @import 'framework/tables';
+
+  // Parts
+  @import 'parts/*';
+
+  // Third party
+  //@import 'vendor/...';
+
+  // Shame
+  @import 'shame';
+}
